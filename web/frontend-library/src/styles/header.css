@@ -1,0 +1,26 @@
+header {
+    background-color: whitesmoke;
+}
+.label {
+    width: 5rem;
+    height: 5rem;
+    border: 0.2em solid #E8E8E8;
+}
+.label:hover {
+    border: 0.5em solid #E8E8E8;
+}
+.header_row {
+    height: 7rem;
+}
+.header_pattern {
+    background-image: url("../img/bookrow2.jpg");
+    background-size: contain;
+}
+#titel {
+    background-color: whitesmoke;
+    border: 0.5rem solid black;
+    padding: 0.3rem;
+}
+.header-back {
+    padding: 0 !important;
+}

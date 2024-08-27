@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# Virtual environments
+venv/
+env/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Node.js
+node_modules/
