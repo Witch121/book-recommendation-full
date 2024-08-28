@@ -7,18 +7,23 @@ import Footer from './components/common/footer';
 import NavBar from './components/common/navBar';
 import Home from './components/home';
 import About from './components/about';
+import SignIn from './components/SignIn';
+// import SignOutButton from './components/SignOut';
+// import SignUp from './components/SignUp';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <Header />
+        {/* <SignOutButton /> */}
       </header>
       <div className='MainSpace container-fluid'>
         <NavBar />
         <div>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/SignIn" element={<SignIn />} /> 
             <Route path="/recommendation" element={<BookRecommendation />} />
             <Route path="/about" element={<About />} />
           </Routes>
