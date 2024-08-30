@@ -6,8 +6,10 @@ const signUp = async (email, password) => {
   try {
     await createUserWithEmailAndPassword(auth, email, password);
     console.log("User signed up successfully");
+    return true
   } catch (error) {
-    console.error("Error signing up:", error.message);
+    if (error.code === "auth/email-already-in-use") return false;
+    throw error;
   }
 };
 

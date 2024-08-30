@@ -1,4 +1,20 @@
 import React from 'react';
+import SignOutButton from './SignOut';
+import bigRabbit from '../img/icons-row/big-rabbit.jpg';
+import evilHystrix from '../img/icons-row/evil-hystrix.jpg';
+import manyOwl from '../img/icons-row/many-owl.jpg';
+import pageCat from '../img/icons-row/page-cat.jpg';
+import rainCat from '../img/icons-row/rainyDays-cat.jpg';
+import smileUnicorn from '../img/icons-row/smile-unicorn.jpg';
+
+const images = [
+  bigRabbit,
+  evilHystrix,
+  manyOwl,
+  rainCat,
+  pageCat,
+  smileUnicorn
+];
 
 const Home = () => {
   return (
@@ -15,8 +31,25 @@ const Home = () => {
           I hope this application becomes your trusted companion, helping you effortlessly find your next great read without the agony of choosing among dozens of options. Happy reading!
         </p>
       </section>
-
-      <section className="feature-section">
+      <SignOutButton />
+      <section>
+        <div className="rowImg">
+          <div className="rowImg-track">
+            {images.map((img, index) => (
+              <div className="rowImg-item" key={index}>
+                <img src={img} alt={`rowImg ${index}`} />
+              </div>
+            ))}
+            {/* Duplicate the images to create a seamless loop */}
+            {images.map((img, index) => (
+              <div className="rowImg-item" key={index + images.length}>
+                <img src={img} alt={`rowImg duplicate ${index}`} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      {/* <section className="feature-section">
         <h2 className="feature-title">Why You'll Love This Site</h2>
         <ul className="feature-list">
           <li>Personalized book recommendations tailored to your taste.</li>
@@ -24,7 +57,7 @@ const Home = () => {
           <li>User-friendly interface for a stress-free experience.</li>
           <li>Connect with other book lovers and share your favorites.</li>
         </ul>
-      </section>
+      </section> */}
     </div>
   );
 };

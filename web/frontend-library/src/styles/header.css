@@ -24,3 +24,6 @@ header {
 .header-back {
     padding: 0 !important;
 }
+.user-info{
+    background-color: aliceblue;
+}

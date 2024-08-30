@@ -8,31 +8,33 @@ import NavBar from './components/common/navBar';
 import Home from './components/home';
 import About from './components/about';
 import SignIn from './components/SignIn';
-// import SignOutButton from './components/SignOut';
-// import SignUp from './components/SignUp';
+import SignUp from './components/SignUp';
+import { AuthProvider } from './components/common/userInfo';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <Header />
-        {/* <SignOutButton /> */}
-      </header>
-      <div className='MainSpace container-fluid'>
-        <NavBar />
-        <div>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/SignIn" element={<SignIn />} /> 
-            <Route path="/recommendation" element={<BookRecommendation />} />
-            <Route path="/about" element={<About />} />
-          </Routes>
+    <AuthProvider>
+      <div className="App">
+        <header className="App-header">
+          <Header />
+        </header>
+        <div className='MainSpace container-fluid'>
+          <NavBar />
+          <div>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/SignUp" element={<SignUp />} /> 
+                <Route path="/SignIn" element={<SignIn />} /> 
+                <Route path="/recommendation" element={<BookRecommendation />} />
+                <Route path="/about" element={<About />} />
+              </Routes>
+          </div>
+        </div>
+        <div className='Footer'>
+          <Footer />
         </div>
       </div>
-      <div className='Footer'>
-        <Footer />
-      </div>
-    </div>
+    </AuthProvider>
   );
 }
 
