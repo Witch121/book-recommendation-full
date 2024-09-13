@@ -1,5 +1,5 @@
 import React from 'react';
-import SignOutButton from './SignOut';
+// import SignOutButton from './SignOut';
 import bigRabbit from '../img/icons-row/big-rabbit.jpg';
 import evilHystrix from '../img/icons-row/evil-hystrix.jpg';
 import manyOwl from '../img/icons-row/many-owl.jpg';
@@ -31,7 +31,7 @@ const Home = () => {
           I hope this application becomes your trusted companion, helping you effortlessly find your next great read without the agony of choosing among dozens of options. Happy reading!
         </p>
       </section>
-      <SignOutButton />
+      {/* <SignOutButton /> */}
       <section>
         <div className="rowImg">
           <div className="rowImg-track">

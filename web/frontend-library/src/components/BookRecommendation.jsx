@@ -13,7 +13,7 @@ function BookRecommendation() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSearchClicked(true); // Mark that the search button has been clicked
+    setSearchClicked(true);
     axios.post('http://127.0.0.1:5000/api/recommend', { book_name: bookName })
       .then(response => {
         setRecommendations(response.data);

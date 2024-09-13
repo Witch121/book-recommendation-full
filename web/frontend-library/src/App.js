@@ -9,6 +9,7 @@ import Home from './components/home';
 import About from './components/about';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
+import AddBook from './components/AddBook'
 import { AuthProvider } from './components/common/userInfo';
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
                 <Route path="/SignIn" element={<SignIn />} /> 
                 <Route path="/recommendation" element={<BookRecommendation />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/AddBook" element={<AddBook />} />
               </Routes>
           </div>
         </div>

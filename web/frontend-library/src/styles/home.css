@@ -74,7 +74,7 @@
   .rowImg-track {
   display: flex;
   width: calc(200%);
-  animation: scroll 20s linear infinite;
+  animation: scroll 30s linear infinite;
   align-items: center; /* Ensure items are centered vertically */
 }
 
