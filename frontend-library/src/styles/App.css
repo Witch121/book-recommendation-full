@@ -1,0 +1,22 @@
+@import url("./header.css");
+@import url("./footer.css");
+@import url("./recommendation.css");
+@import url("./about.css");
+@import url("./home.css");
+@import url("./navBar.css");
+@import url("./signIn.css");
+@import url("./addBooks.css");
+@import url("./library.css");
+
+body {
+  background-color: #edf2f7!important;
+}
+h1 {
+  text-align: center;
+}
+.MainSpace {
+  display: grid;
+  grid-template-columns: 20% 80%;
+  margin: 10px;
+  min-height: 100dvh;
+}

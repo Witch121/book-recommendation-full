@@ -1,0 +1,23 @@
+.navBar {
+    background-color:  #00264d;
+    height: 100%;
+    font-size: 20px;
+    padding-right: 20px;
+    margin-right: 20px;
+    padding-top: 0.5rem;
+    border-radius: 0.275rem;
+}
+.linkNav {
+    color: whitesmoke;
+    text-decoration: none !important;
+    display: flex;
+    flex-direction: column;
+}
+.linkNav:hover {
+    color: #6699CC;
+}
+li {
+    margin-top: 10px;
+    color: whitesmoke;
+    list-style: none;
+}

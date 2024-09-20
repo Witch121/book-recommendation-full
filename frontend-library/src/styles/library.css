@@ -1,0 +1,50 @@
+.library_table li{
+    color: black !important;
+}
+
+.library_table .btn-input {
+    margin: 0.5rem;
+}
+
+.confirmation-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    background-color: #e6f2ff;
+    padding: 20px;
+    border: 1px solid black;
+    border-radius: 0.375rem;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    font-weight: 600;
+  }
+
+.btn-table{
+    border-radius: 0.275rem;
+    border: 0.5px solid #204060;
+    margin: 0.3rem;
+    padding: 0.3rem;
+    background-color: #ecf2f9;
+  }
+
+.btn-table:hover {
+    background-color: #b2c2d1;
+}
+.btn-table.img{
+    border: 0;
+}
+
+.table-img-btn{
+    height: 1.3rem;
+}
+
+.btn-group.pop-up{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.save-btn{
+    padding: 0.7rem;
+    font-weight: 650;
+}
