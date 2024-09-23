@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 // import SignOutButton from './SignOut';
 import bigRabbit from '../img/icons-row/big-rabbit.jpg';
 import evilHystrix from '../img/icons-row/evil-hystrix.jpg';
@@ -8,15 +8,23 @@ import rainCat from '../img/icons-row/rainyDays-cat.jpg';
 import smileUnicorn from '../img/icons-row/smile-unicorn.jpg';
 
 const images = [
-  bigRabbit,
-  evilHystrix,
-  manyOwl,
-  rainCat,
-  pageCat,
-  smileUnicorn
+  { src: bigRabbit, quote: "Sometimes you just need to lay on the couch and read for a couple of years" },
+  { src: evilHystrix, quote: "If anyone needs me, I’ll be reading. Please don’t need me" },
+  { src: manyOwl, quote: "My problem with reading books is that I get distracted… by other books" },
+  { src: rainCat, quote: "When trouble strikes, head to the library. You will either be able to solve the problem, or simply have something to read as the world crashes down on you" },
+  { src: pageCat, quote: "If my book is open, your mouth should be closed" },
+  { src: smileUnicorn, quote: "Apparently, reading during lunch and ignoring others is considered “rude”" }
 ];
 
 const Home = () => {
+
+  const [selectedQuote, setSelectedQuote] = useState(null);
+
+  const handleClickOutside = (e) => {
+    if (e.target.className === 'quote-overlay') {
+      setSelectedQuote(null); // Hide the quote when clicking outside
+    }
+  };
   return (
     <div className="home-container">
       <section className="intro-section">
@@ -31,24 +39,37 @@ const Home = () => {
           I hope this application becomes your trusted companion, helping you effortlessly find your next great read without the agony of choosing among dozens of options. Happy reading!
         </p>
       </section>
-      {/* <SignOutButton /> */}
       <section>
         <div className="rowImg">
           <div className="rowImg-track">
             {images.map((img, index) => (
               <div className="rowImg-item" key={index}>
-                <img src={img} alt={`rowImg ${index}`} />
+                <img 
+                  src={img.src} 
+                  alt={`rowImg ${index}`}
+                  onClick={() => setSelectedQuote(img.quote)}
+                />
               </div>
             ))}
-            {/* Duplicate the images to create a seamless loop */}
             {images.map((img, index) => (
               <div className="rowImg-item" key={index + images.length}>
-                <img src={img} alt={`rowImg duplicate ${index}`} />
+                <img 
+                  src={img.src} 
+                  alt={`rowImg duplicate ${index}`} 
+                  onClick={() => setSelectedQuote(img.quote)} 
+                />
               </div>
             ))}
           </div>
         </div>
       </section>
+      {selectedQuote && (
+        <div className="quote-overlay" onClick={handleClickOutside}>
+          <div className="quote-box">
+            <p>{selectedQuote}</p>
+          </div>
+        </div>
+      )}
       {/* <section className="feature-section">
         <h2 className="feature-title">Why You'll Love This Site</h2>
         <ul className="feature-list">

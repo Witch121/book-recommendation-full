@@ -38,7 +38,7 @@ const NavBar = () => {
       <ul className="navBar">
         {user ? (
           <>
-            
+            <li><Link to="/" className="linkNav">Home</Link></li>
             <li><Link to="/Library" className="linkNav">Library</Link></li>
             <li><Link to="/AddBook" className="linkNav">Add Book</Link></li>
             <li><Link to="/recommendation" className="linkNav">Book Recommendations</Link></li>

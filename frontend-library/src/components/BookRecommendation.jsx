@@ -1,20 +1,64 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import bookListImg from '../img/book-happy-face.png';
+import { useAuth } from '../components/common/userInfo';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../firebaseFolder/firebase';
 
 function BookRecommendation() {
   const [bookName, setBookName] = useState('');
+  const [userGenres, setUserGenres] = useState('');
+  const [userRatings, setUserRatings] = useState({});
+  const [userKeywords, setUserKeywords] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
   const [searchClicked, setSearchClicked] = useState(false);
+  const { user,userData, loading } = useAuth();
 
-  const handleInputChange = (e) => {
+  useEffect(() => {
+    if (user && userData) {
+      // Fetch additional user-specific data from Firestore if needed (optional)
+      const fetchBookData = async () => {
+        try {
+          // Assuming you store books in a separate collection related to user by uid
+          const bookDocRef = doc(db, 'books', user.uid); // Example, adjust if necessary
+          const bookDocSnap = await getDoc(bookDocRef);
+
+          if (bookDocSnap.exists()) {
+            const bookData = bookDocSnap.data();
+            // Set ratings, genres, or other necessary fields from Firestore
+            setUserGenres(bookData.genres || []);
+            setUserRatings(bookData.ratings || {});
+            setUserKeywords(bookData.keywords || []);
+          } else {
+            console.log("No such book data in Firestore!");
+          }
+        } catch (error) {
+          console.error("Error fetching book data from Firestore:", error);
+        }
+      };
+
+      fetchBookData();
+    }
+  }, [user, userData]);
+
+  const handleBookInputChange = (e) => {
     setBookName(e.target.value);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setSearchClicked(true);
-    axios.post('http://127.0.0.1:5000/api/recommend', { book_name: bookName })
+
+    const requestData = {
+      book_name: bookName,
+      user_preferences: {
+        genres: userGenres,
+        ratings: userRatings,
+        keywords: userKeywords
+      }
+    };
+
+    axios.post('http://127.0.0.1:5000/api/recommend', requestData)
       .then(response => {
         setRecommendations(response.data);
       })
@@ -22,6 +66,14 @@ function BookRecommendation() {
         console.error('There was an error making the request!', error);
       });
   };
+
+  if (loading) {
+    return <div>Loading...</div>; // Show a loading indicator while fetching user data
+  }
+
+  if (!user) {
+    return <div>Please sign in to get recommendations</div>; // Handle case where user isn't authenticated
+  }
 
   return (
     <div className="recommendation-container">
@@ -34,10 +86,10 @@ function BookRecommendation() {
                   type="text"
                   id="book_name_field"
                   value={bookName}
-                  onChange={handleInputChange}
+                  onChange={handleBookInputChange}
                   required
                 />
-              </div>
+              </div> 
               <button type="submit" className='recommendBooks-btn btn-input'>Get Recommendations</button>
             </form>
           <div className="booklist">
@@ -50,7 +102,6 @@ function BookRecommendation() {
                 <li className='book-list' key={index} >
                   <strong>Title:</strong> {book.title}
                   <strong>  Author(s):</strong> {book.authors}
-                  <strong>  Published Year:</strong> {book.publishedDate}
                 </li>
               ))}
             </ul>
@@ -81,7 +132,7 @@ function BookRecommendation() {
                   type="text"
                   id="book_name_field"
                   value={bookName}
-                  onChange={handleInputChange}
+                  onChange={handleBookInputChange}
                   required
                 />
               </div>

@@ -1,11 +1,87 @@
-.library_table li{
-    color: black !important;
+.library_table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
 }
 
-.library_table .btn-input {
-    margin: 0.5rem;
+.library_table th, .library_table td {
+    padding: 0.8rem;
+    border-top: 1px solid #204060;
+    border-bottom: 1px solid #204060;
+    text-align: left;
 }
 
+/* Table Header Styles */
+.showLibraryTableHead th {
+    background-color: #d2d9df;
+    color: #204060;
+    font-weight: 700;
+    position: relative;
+}
+
+/* Tooltip styles */
+.tooltips {
+    position: relative;
+    cursor: pointer;
+    color: inherit;
+}
+
+.infoIconImg {
+    width: 0.8rem;
+    height: auto;
+}
+
+.infoIconImg:hover + .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 0.5rem;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Table Body Styles */
+.library_table td {
+    background-color: #f8f9fa;
+}
+
+/* Button Styles */
+.btn-table {
+    border-radius: 0.375rem;
+    border: 1px solid #204060;
+    margin: 0.2rem;
+    padding: 0.4rem;
+    background-color: #ecf2f9;
+    transition: background-color 0.3s ease;
+}
+
+.btn-table:hover {
+    background-color: #b2c2d1;
+}
+
+/* Image Button Styles */
+.btn-table.img {
+    border: 0;
+}
+
+.table-img-btn {
+    height: 1.3rem;
+}
+
+/* Confirmation Popup */
 .confirmation-popup {
     position: fixed;
     top: 50%;
@@ -17,34 +93,14 @@
     transform: translate(-50%, -50%);
     z-index: 1000;
     font-weight: 600;
-  }
-
-.btn-table{
-    border-radius: 0.275rem;
-    border: 0.5px solid #204060;
-    margin: 0.3rem;
-    padding: 0.3rem;
-    background-color: #ecf2f9;
-  }
-
-.btn-table:hover {
-    background-color: #b2c2d1;
-}
-.btn-table.img{
-    border: 0;
 }
 
-.table-img-btn{
-    height: 1.3rem;
-}
-
-.btn-group.pop-up{
+.btn-group.pop-up {
     display: flex;
-    flex-direction: row;
     justify-content: center;
 }
 
-.save-btn{
+.save-btn {
     padding: 0.7rem;
     font-weight: 650;
 }
