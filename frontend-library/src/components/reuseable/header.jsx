@@ -1,10 +1,10 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import UserMenu from './userMenu'
 import mainImg from '../../img/main_icon.jpg';
-import { useAuth } from './userInfo';
+
 
 const Header = () => {
-  const { user, userData } = useAuth();
 
   return (
     <header className="p-3 mb-3 border-bottom">
@@ -14,13 +14,9 @@ const Header = () => {
             <img  src={mainImg} className="label" id="head_icon" alt="Main Icon" />
           </a>
           <h1 id="titel">Bookworm`s World</h1>
-          {user ? (
-        <>
-          <p className='user-info'>Hello, {userData ? userData.username : user?.email}!</p>
-        </>
-      ) : (
-        <p className='user-info'>Not signed in</p>
-      )}
+          <div className='ms-auto'>
+            <UserMenu />
+          </div>
         </div>
       </div>
     </header>

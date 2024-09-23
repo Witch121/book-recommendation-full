@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import SignOutButton from './SignOut';
 import bigRabbit from '../img/icons-row/big-rabbit.jpg';
 import evilHystrix from '../img/icons-row/evil-hystrix.jpg';
 import manyOwl from '../img/icons-row/many-owl.jpg';

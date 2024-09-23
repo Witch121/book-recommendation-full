@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../components/common/userInfo';
+import { useAuth } from '../components/reuseable/userInfo';
 import { collection, query, where, getDocs, orderBy, updateDoc, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebaseFolder/firebase';
 import EditBtnImg from '../img/edit_icon.png';
 import DeleteBtnImg from '../img/delete_icon.png';
-import InfoIcon from '../img/info_icon.png';
+// import InfoIcon from '../img/info_icon.png';
 
 const Library = () => {
   const { user } = useAuth(); 
@@ -130,18 +130,18 @@ const Library = () => {
         <thead>
           <tr className="showLibraryTableHead">
             {[
-              { label: "Title", tooltip: "The name of the book" },
-              { label: "Author", tooltip: "Who wrote this book? If you don’t know - google it" },
-              { label: "Genre", tooltip: "Fantasy, romance, mystery, etc." },
-              { label: "Place", tooltip: "Where on earth your book is? e.g., phone, home, friends" },
-              { label: "Status", tooltip: "Did read, am reading, will read" },
-              { label: "Rating", tooltip: "1 - 5. This is hard!" },
-              { label: "Serie", tooltip: "" },
-              { label: "Keywords", tooltip: "Summarize the story. Make it 3 words" },
+              { label: "Title", tooltip: "What’s the title? Keep it official!" },
+              { label: "Author", tooltip: "Who’s the author? Google if you're stumped!" },
+              { label: "Genre", tooltip: "What’s the genre? Fantasy, romance, mystery… pick one!" },
+              { label: "Place", tooltip: "Where’s the book now? Phone, home, friend’s place?" },
+              { label: "Status", tooltip: "Your status: Read, reading, or still on the list?" },
+              { label: "Rating", tooltip: "Rate it 1-5… no pressure, just perfection!" },
+              { label: "Serie", tooltip: "Is this part of a series? You’re in for the long haul!" },
+              { label: "Keywords", tooltip: "Describe the plot in 3 words. Challenge accepted?" },
             ].map(({ label, tooltip }) => (
               <th key={label} className="tooltips">
                 {label}
-                <img src={InfoIcon} alt="info icon" className="infoIconImg" />
+                {/* <img src={InfoIcon} alt="info icon" className="infoIconImg" /> */}
                 <span className="tooltip-text">{tooltip}</span>
               </th>
             ))}
@@ -151,7 +151,7 @@ const Library = () => {
         <tbody>
           {filteredBooks.map(book => (
             <tr key={book.id}>
-              {["title", "author", "genre", "place", "status", "rating", "series_name", "keywords"].map(field => (
+              {["title", "author", "genre", "location", "status", "rating", "series_name", "keywords"].map(field => (
                 <td key={field}>
                   {editBookId === book.id ? (
                     field === "status" ? (
@@ -174,8 +174,12 @@ const Library = () => {
                       />
                     )
                   ) : (
-                    field === "series_name" ? (
-                      `${book.series_name} (#${book.bond_number})`
+                    field === "series_name"  ? (
+                      book.series_name && !isNaN(book.bond_number) && book.bond_number > 0 ? (
+                        `${book.series_name} (#${book.bond_number})`
+                      ) : (
+                        'Not part of a series'
+                      )
                     ) : (
                       field === "keywords"
                         ? Array.isArray(book[field]) ? book[field].join(', ') : 'N/A'
@@ -191,9 +195,11 @@ const Library = () => {
                   <div>
                     <button onClick={() => handleEditClick(book)} className="btn-table img">
                       <img src={EditBtnImg} alt="edit button" className="table-img-btn" />
+                      <span className="tooltip-text-btn">Edit</span>
                     </button>
                     <button onClick={() => handleDeleteClick(book)} className="btn-table img">
                       <img src={DeleteBtnImg} alt="delete button" className="table-img-btn" />
+                      <span className="tooltip-text-btn">Delete</span>
                     </button>
                   </div>
                 )}

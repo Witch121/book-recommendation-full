@@ -97,14 +97,16 @@ async function prepareModel(bookName, userPreferences = {}, language = 'en') {
   const concatenated = tf.layers.concatenate().apply([inputKeywords, inputRating, inputGenre]);
 
   const dense1 = tf.layers.dense({ units: 64, activation: 'relu' }).apply(concatenated);
-  const dense2 = tf.layers.dense({ units: 32, activation: 'relu' }).apply(dense1);
-  const output = tf.layers.dense({ units: 1 }).apply(dense2);
+  const dropout1 = tf.layers.dropout({ rate: 0.5 }).apply(dense1);
+  const dense2 = tf.layers.dense({ units: 32, activation: 'relu' }).apply(dropout1);
+  const dropout2 = tf.layers.dropout({ rate: 0.5 }).apply(dense2);
+  const output = tf.layers.dense({ units: 1 }).apply(dropout2);
 
   const model = tf.model({ inputs: [inputKeywords, inputRating, inputGenre], outputs: output });
 
   model.compile({
     optimizer: 'adam',
-    loss: 'meanSquaredError',
+    loss: 'meanAbsoluteError',
   });
 
   console.log('Model compiled. Starting training...');
@@ -113,7 +115,7 @@ async function prepareModel(bookName, userPreferences = {}, language = 'en') {
   await model.fit(
     { keywords: keywordTensor, rating: ratingTensor, genre: genreTensor },
     ratingTensor,
-    { epochs: 100 }
+    { epochs: 500 }
   );
 
   console.log('Model trained successfully.');

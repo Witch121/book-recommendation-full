@@ -24,9 +24,3 @@ header {
 .header-back {
     padding: 0 !important;
 }
-.user-info{
-    background-color: aliceblue;
-    margin: 0.7rem;
-    padding: 0.5rem;
-    border-radius: 0.375rem;
-}

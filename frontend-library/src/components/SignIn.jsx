@@ -1,6 +1,5 @@
 import React, { useState} from 'react';
 import { signIn } from '../firebaseFolder/authentification';
-// import { auth } from '../firebaseFolder/firebase';
 import { useNavigate } from 'react-router-dom';
 
 const SignIn = () => {

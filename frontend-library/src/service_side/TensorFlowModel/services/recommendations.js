@@ -1,4 +1,5 @@
 const tf = require('@tensorflow/tfjs');
+const { plot } = require('nodeplotlib');
 
 async function getRecommendations(bookName, books, model, userPreferences = {}, topN = 10) {
     const bookTitles = books.map(book => book.title.toLowerCase());
@@ -37,6 +38,41 @@ async function getRecommendations(bookName, books, model, userPreferences = {}, 
       .map((book, index) => ({ ...book, predictedRating: predictions[index] }))
       .sort((a, b) => b.predictedRating - a.predictedRating)
       .slice(0, topN);
+
+  //   // Log predictions and actual ratings for comparison
+  //   recommendations.forEach((book, index) => {
+  //     console.log(`Title: ${book.title}`);
+  //     console.log(`Actual Rating: ${book.averageRating}`);
+  //     console.log(`Predicted Rating: ${book.predictedRating.toFixed(2)}`);
+  //     console.log('-------------------------------------');
+
+  //   // Extract data for visualization
+  //   const actualRatings = recommendations.map(book => book.averageRating);
+  //   const predictedRatings = recommendations.map(book => parseFloat(book.predictedRating.toFixed(2)));
+  //   const titles = recommendations.map(book => book.title);
+  //   // Plot the comparison of actual vs predicted ratings
+  //   plot([
+  //     {
+  //         x: titles,
+  //         y: actualRatings,
+  //         type: 'bar',
+  //         name: 'Actual Ratings',
+  //         marker: { color: 'blue' }
+  //     },
+  //     {
+  //         x: titles,
+  //         y: predictedRatings,
+  //         type: 'bar',
+  //         name: 'Predicted Ratings',
+  //         marker: { color: 'green' }
+  //     }
+  // ], {
+  //     title: 'Actual vs Predicted Ratings for Top Recommendations',
+  //     xaxis: { title: 'Books' },
+  //     yaxis: { title: 'Ratings' },
+  //     barmode: 'group'
+  // });
+  // });
   
     return recommendations.map(book => ({
       title: book.title,

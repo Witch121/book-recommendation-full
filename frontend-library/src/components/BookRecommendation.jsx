@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import bookListImg from '../img/book-happy-face.png';
-import { useAuth } from '../components/common/userInfo';
+import { useAuth } from '../components/reuseable/userInfo';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebaseFolder/firebase';
 
@@ -16,16 +16,13 @@ function BookRecommendation() {
 
   useEffect(() => {
     if (user && userData) {
-      // Fetch additional user-specific data from Firestore if needed (optional)
       const fetchBookData = async () => {
         try {
-          // Assuming you store books in a separate collection related to user by uid
-          const bookDocRef = doc(db, 'books', user.uid); // Example, adjust if necessary
+          const bookDocRef = doc(db, 'books', user.uid);
           const bookDocSnap = await getDoc(bookDocRef);
 
           if (bookDocSnap.exists()) {
             const bookData = bookDocSnap.data();
-            // Set ratings, genres, or other necessary fields from Firestore
             setUserGenres(bookData.genres || []);
             setUserRatings(bookData.ratings || {});
             setUserKeywords(bookData.keywords || []);
@@ -68,11 +65,11 @@ function BookRecommendation() {
   };
 
   if (loading) {
-    return <div>Loading...</div>; // Show a loading indicator while fetching user data
+    return <div>Loading...</div>;
   }
 
   if (!user) {
-    return <div>Please sign in to get recommendations</div>; // Handle case where user isn't authenticated
+    return <div>Please sign in to get recommendations</div>;
   }
 
   return (
