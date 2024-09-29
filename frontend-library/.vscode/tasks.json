@@ -1,0 +1,28 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Deploy functions",
+            "type": "shell",
+            "command": "firebase deploy --only functions",
+            "promptOnClose": false,
+            "problemMatcher": []
+        },
+        {
+            "label": "Deploy hosting",
+            "type": "shell",
+            "command": "firebase deploy --only hosting",
+            "promptOnClose": false,
+            "problemMatcher": []
+        },
+        {
+            "label": "Deploy storage",
+            "type": "shell",
+            "command": "firebase deploy --only storage",
+            "promptOnClose": false,
+            "problemMatcher": []
+        },
+    ]
+}

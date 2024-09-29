@@ -4,6 +4,7 @@ import bookListImg from '../img/book-happy-face.png';
 import { useAuth } from '../components/reuseable/userInfo';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebaseFolder/firebase';
+import { functions, httpsCallable } from "../firebaseFolder/firebase"; // Adjust path accordingly
 
 function BookRecommendation() {
   const [bookName, setBookName] = useState('');
@@ -42,7 +43,7 @@ function BookRecommendation() {
     setBookName(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSearchClicked(true);
 
@@ -55,6 +56,16 @@ function BookRecommendation() {
       }
     };
 
+    const fun = httpsCallable(functions, "recommendation");
+
+    try {
+      // Call the function and pass in data
+      const result = await fun(requestData);
+      setRecommendations(result.data);
+    } catch (error) {
+      console.error("Error calling Firebase function:", error);
+    }
+    
     axios.post('http://127.0.0.1:5000/api/recommend', requestData)
       .then(response => {
         setRecommendations(response.data);
