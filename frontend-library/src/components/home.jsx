@@ -69,15 +69,6 @@ const Home = () => {
           </div>
         </div>
       )}
-      {/* <section className="feature-section">
-        <h2 className="feature-title">Why You'll Love This Site</h2>
-        <ul className="feature-list">
-          <li>Personalized book recommendations tailored to your taste.</li>
-          <li>An extensive library of genres and authors to explore.</li>
-          <li>User-friendly interface for a stress-free experience.</li>
-          <li>Connect with other book lovers and share your favorites.</li>
-        </ul>
-      </section> */}
     </div>
   );
 };

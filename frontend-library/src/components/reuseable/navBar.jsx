@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from './userInfo';
-import { db } from '../../firebaseFolder/firebase';
+import { db } from '../firebaseFolder/firebase';
 import { getDoc, doc} from 'firebase/firestore';
 
 
@@ -42,6 +42,7 @@ const NavBar = () => {
             <li><Link to="/Library" className="linkNav">Library</Link></li>
             <li><Link to="/AddBook" className="linkNav">Add Book</Link></li>
             <li><Link to="/recommendation" className="linkNav">Book Recommendations</Link></li>
+            <li><Link to="/randomBook" className="linkNav">I`m feeling Lucky</Link></li>
             <li><Link to="/about" className="linkNav">About</Link></li>
             {isAdmin && <li><Link to="/AdminPage" className="linkNav">Admin Page</Link></li>}
             <li><Link to="/SignOut" className="linkNav">Sign Out</Link></li>

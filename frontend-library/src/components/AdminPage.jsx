@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs} from 'firebase/firestore';
-import { db } from '../firebaseFolder/firebase';
+import { db } from '../components/firebaseFolder/firebase';
 
 const AdminPage = () => {
     const [loading, setLoading] = useState(true);
@@ -72,7 +72,7 @@ const AdminPage = () => {
     };
   
     return (
-      <div>
+      <div className="home-container">
         <h2>Admin Statistics</h2>
   
         {loading ? (

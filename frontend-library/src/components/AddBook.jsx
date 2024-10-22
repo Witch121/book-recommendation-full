@@ -1,24 +1,24 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Papa from 'papaparse'; // For CSV parsing
-import { uploadBookToFirestore } from '../firebaseFolder/firestore'; // Import Firestore logic
-import { useNavigate } from 'react-router-dom'; // For navigation to home page
-import { useAuth } from '../components/reuseable/userInfo'; // Auth info
+import Papa from 'papaparse';
+import { uploadBookToFirestore } from '../components/firebaseFolder/firestore';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../components/reuseable/userInfo';
 
 const AddBook = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
   const tooltipsText = [
-    { tooltip: "What’s the title? Keep it official!" },
-    { tooltip: "Who’s the author? Google if you're stumped!" },
-    { tooltip: "What’s the genre? Fantasy, romance, mystery… pick one!" },
-    { tooltip: "Where’s the book now? Phone, home, friend’s place?" },
+    { tooltip: "What’s the title? <br /> Keep it official!" },
+    { tooltip: "Who’s the author?<br />  Google if you're stumped!" },
+    { tooltip: "What’s the genre? <br /> Fantasy, romance, mystery… pick one!" },
+    { tooltip: "Where’s the book now? <br /> Phone, home, friend’s place?" },
     { tooltip: "Your status: Read, reading, or still on the list?" },
     { tooltip: "Rate it 1-5… no pressure, just perfection!" },
-    { tooltip: "Is this part of a series? You’re in for the long haul!" },
-    { tooltip: "Which book in the series? Give us the number!" },
-    { tooltip: "Describe the plot in 3 words. Challenge accepted?" },
+    { tooltip: "Is this part of a series? <br /> You’re in for the long haul!" },
+    { tooltip: "Which book in the series? <br /> Give us the number!" },
+    { tooltip: "Describe the plot in 3 words. <br /> Challenge accepted?" },
   ];
 
   const [bookData, setBookData] = useState({
@@ -109,7 +109,7 @@ const AddBook = () => {
       genre: '',
       series_name: '',
       bond_number: 0,
-      status: 'not_read',
+      status: 'not read',
       location: 'home',
       keywords: [],
       rating: 0,
@@ -124,7 +124,7 @@ const AddBook = () => {
   };
 
   return (
-    <div>
+    <div className="home-container">
       {!formSubmitted ? (
         <>
           {message && <p>{message}</p>}
@@ -141,12 +141,12 @@ const AddBook = () => {
                 { name: "bond_number", label: "Bond Number", type: "number", placeholder: "Bond Number", tooltip: tooltipsText[7].tooltip, min: "0" },
                 { name: "location", label: "Location", type: "text", placeholder: "Location (home or loaned)", tooltip: tooltipsText[3].tooltip },
                 { name: "keywords", label: "Keywords", type: "text", placeholder: "Keywords (comma separated)", tooltip: tooltipsText[8].tooltip },
-                { name: "rating", label: "Rating", type: "number", placeholder: "Rating (1-5)", tooltip: tooltipsText[5].tooltip, min: "1", max: "5" }
+                { name: "rating", label: "Rating", type: "number", placeholder: "Rating (1-5)", tooltip: tooltipsText[5].tooltip, min: "0", max: "5" }
               ].map(({ name, label, type, placeholder, tooltip, ...rest }) => (
                 <div key={name} className="pure-u-1 pure-u-md-1-3">
                   <label htmlFor={name} className="form-label tooltips">
                     {label}
-                    <span className="tooltip-text">{tooltip}</span>
+                    <span className="tooltip-text" dangerouslySetInnerHTML={{ __html: tooltip }}></span>
                   </label>
                   <input
                     type={type}
@@ -183,6 +183,9 @@ const AddBook = () => {
 
               <button type="submit" onClick={addBook} className="btn-table">
                 Add Book to Library
+              </button>
+              <button type="submit" onClick={resetForm} className="btn-table">
+                Clean the
               </button>
             </fieldset>
           </form>

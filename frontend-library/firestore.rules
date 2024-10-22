@@ -19,5 +19,32 @@ service cloud.firestore {
     	allow create: if request.auth.uid != null && request.resource.data.uid == request.auth.uid
       allow read, update, delete: if request.auth.uid == resource.data.uid
     }
+    
+    // Users collection rules
+    match /users/{userId} {
+    
+      function isAdmin(){
+        let d = get(/databases/$(database)/documents/properties/roles).data;
+        let arr = "admin" in d ? d.admin : []; 
+        return request.auth.uid in arr
+      }
+
+      // Allow any authenticated user to read their own document
+      allow read, write: if request.auth.uid != null && request.auth.uid == userId;
+      
+      // Allow updates if the user is the owner or an admin
+      allow update: if request.auth.uid == userId || isAdmin();
+      
+      // Allow creating documents only for the authenticated user
+      allow create: if request.auth.uid != null && request.auth.uid == userId;
+      
+      // Prevent users from deleting their user document
+      allow delete: if isAdmin();
+    }
+
+    // Allow reading from properties for any authenticated user
+    match /properties/{propertieID} {
+      allow read: if request.auth.uid != null;
+    }
   }
 }

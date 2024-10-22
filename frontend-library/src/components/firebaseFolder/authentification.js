@@ -1,6 +1,6 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { uploadUserToFirestore } from './firestore';
-import { auth } from "./firebase";
+const { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } = require('firebase/auth');
+const { uploadUserToFirestore } = require('./firestore');
+const { auth } = require("./firebase");
 
 // Sign Up Function
 const signUp = async (email, password, username) => {
@@ -46,4 +46,4 @@ const signOutUser = async () => {
   }
 };
 
-export { signUp, signIn, signOutUser};
+module.exports = { signUp, signIn, signOutUser };

@@ -22,6 +22,7 @@
     position: relative;
     cursor: pointer;
     color: inherit;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .infoIconImg {

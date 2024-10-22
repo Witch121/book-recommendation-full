@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth, db } from '../../firebaseFolder/firebase';
-import { doc, getDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
+const { auth, db } = require('../firebaseFolder/firebase');
+const { getDoc, doc } = require('firebase/firestore');
+
 
 const AuthContext = createContext(null);
 
@@ -17,35 +18,39 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
         setLoading(true);
-
-        try{
-
-        const userDocRef = doc(db, 'users', currentUser.uid);
-        const userDocSnap = await getDoc(userDocRef);
-
-        if (userDocSnap.exists()) {
-          setUserData(userDocSnap.data());
-        } else {
-          console.log("No such user data in Firestore!");
+  
+        try {
+          const userDocRef = doc(db,"users", currentUser.uid);
+          console.log(userDocRef)
+          console.log("Fetching user data for:", currentUser.uid);  // Debugging
+  
+          const userDocSnap = await getDoc(userDocRef);
+          console.log("Document snapshot:", userDocSnap);  // Debugging
+  
+          if (userDocSnap.exists()) {
+            const fetchedUserData = userDocSnap.data();
+            console.log("Fetched user data:", fetchedUserData);  // Debugging
+            setUserData(fetchedUserData);
+          } else {
+            console.log("No such user data in Firestore!");
+          }
+        } catch (error) {
+          console.error("Error fetching user data from Firestore:", error);  // Improved error handling
         }
-      } catch (error) {
-        console.error("Error fetching user data from Firestore:", error);
-      }
-    }  else {
+      } else {
         setUser(null);
         setUserData(null);
         navigate('/SignIn');
       }
-      setLoading(false); 
+      setLoading(false);
     });
-
+  
     return unsubscribe;
-  }, [ ]); //
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, userData, loading }}>

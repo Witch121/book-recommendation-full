@@ -2,7 +2,7 @@ const tf = require('@tensorflow/tfjs');
 const { fetchGoogleBooksData } = require('../services/googleBooksAPI');
 const natural = require('natural'); // For text processing
 
-async function prepareModel(bookName, userPreferences = {}, language = 'en') {
+async function prepareModel(bookName, language = 'en') {
   console.log(`Fetching Google Books data for: ${bookName}`);
   
   const data = await fetchGoogleBooksData(bookName, language);
@@ -38,55 +38,20 @@ async function prepareModel(bookName, userPreferences = {}, language = 'en') {
     return vector;
   });
 
-  // console.log(`Keyword Vectors Shape: [${keywordVectors.length}, ${keywordVectors[0]?.length || 0}]`);
-
-  if (keywordVectors.length === 0 || keywordVectors[0].length === 0) {
-    throw new Error("Keyword vectors are empty or improperly formatted.");
-  }
-
   const numFeatures = keywordVectors[0].length;
   const numExamples = keywordVectors.length;
 
   // Create TensorFlow tensor from keyword vectors
-  let keywordTensor;
-  try {
-    console.log("Creating keywordTensor...");
-    keywordTensor = tf.tensor2d(keywordVectors, [numExamples, numFeatures]);
-    console.log("keywordTensor created successfully.");
-  } catch (error) {
-    console.error("Error creating keywordTensor:", error);
-    throw error;
-  }
+  const keywordTensor = tf.tensor2d(keywordVectors, [numExamples, numFeatures]);
 
   // Prepare ratings tensor
   const ratings = books.map(book => book.averageRating);
-  console.log(`Ratings Shape: [${ratings.length}, 1]`);
+  const ratingTensor = tf.tensor2d(ratings.map(rating => [rating]), [numExamples, 1]);
 
-  let ratingTensor;
-  try {
-    console.log("Creating ratingTensor...");
-    ratingTensor = tf.tensor2d(ratings.map(rating => [rating]), [numExamples, 1]);
-    console.log("ratingTensor created successfully.");
-  } catch (error) {
-    console.error("Error creating ratingTensor:", error);
-    throw error;
-  }
+  // Prepare genres tensor based on the genre data from Google Books
+  const genres = books.map(book => (book.genre === 'fiction' ? 1 : 0));  // Example genre
 
-  // Prepare genres tensor based on user preferences
-  const preferredGenre = userPreferences.genres || '';
-  const genres = books.map(book => (book.genre === preferredGenre ? 1 : 0));
-
-  console.log(`Genres Shape: [${genres.length}, 1]`);
-
-  let genreTensor;
-  try {
-    console.log("Creating genreTensor...");
-    genreTensor = tf.tensor2d(genres.map(genre => [genre]), [numExamples, 1]);
-    console.log("genreTensor created successfully.");
-  } catch (error) {
-    console.error("Error creating genreTensor:", error);
-    throw error;
-  }
+  const genreTensor = tf.tensor2d(genres.map(genre => [genre]), [numExamples, 1]);
 
   // Define the model architecture
   const inputKeywords = tf.input({ shape: [numFeatures], name: 'keywords' });
@@ -95,19 +60,12 @@ async function prepareModel(bookName, userPreferences = {}, language = 'en') {
 
   // Concatenate all inputs and build the model
   const concatenated = tf.layers.concatenate().apply([inputKeywords, inputRating, inputGenre]);
-
-  const dense1 = tf.layers.dense({ units: 64, activation: 'relu' }).apply(concatenated);
-  const dropout1 = tf.layers.dropout({ rate: 0.5 }).apply(dense1);
-  const dense2 = tf.layers.dense({ units: 32, activation: 'relu' }).apply(dropout1);
-  const dropout2 = tf.layers.dropout({ rate: 0.5 }).apply(dense2);
-  const output = tf.layers.dense({ units: 1 }).apply(dropout2);
+  const dense1 = tf.layers.dense({ units: 128, activation: 'relu' }).apply(concatenated);
+  const output = tf.layers.dense({ units: 1 }).apply(dense1);
 
   const model = tf.model({ inputs: [inputKeywords, inputRating, inputGenre], outputs: output });
 
-  model.compile({
-    optimizer: 'adam',
-    loss: 'meanAbsoluteError',
-  });
+  model.compile({ optimizer: 'adam', loss: 'meanSquaredError' });
 
   console.log('Model compiled. Starting training...');
 
@@ -115,7 +73,7 @@ async function prepareModel(bookName, userPreferences = {}, language = 'en') {
   await model.fit(
     { keywords: keywordTensor, rating: ratingTensor, genre: genreTensor },
     ratingTensor,
-    { epochs: 500 }
+    { epochs: 50 }
   );
 
   console.log('Model trained successfully.');
