@@ -25,15 +25,15 @@ export const AuthProvider = ({ children }) => {
   
         try {
           const userDocRef = doc(db,"users", currentUser.uid);
-          console.log(userDocRef)
-          console.log("Fetching user data for:", currentUser.uid);  // Debugging
+          // console.log(userDocRef)
+          // console.log("Fetching user data for:", currentUser.uid);
   
           const userDocSnap = await getDoc(userDocRef);
-          console.log("Document snapshot:", userDocSnap);  // Debugging
+          // console.log("Document snapshot:", userDocSnap);
   
           if (userDocSnap.exists()) {
             const fetchedUserData = userDocSnap.data();
-            console.log("Fetched user data:", fetchedUserData);  // Debugging
+            // console.log("Fetched user data:", fetchedUserData);
             setUserData(fetchedUserData);
           } else {
             console.log("No such user data in Firestore!");
