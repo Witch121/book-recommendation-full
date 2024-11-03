@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
-import bigRabbit from '../img/icons-row/big-rabbit.jpg';
-import evilHystrix from '../img/icons-row/evil-hystrix.jpg';
-import manyOwl from '../img/icons-row/many-owl.jpg';
-import pageCat from '../img/icons-row/page-cat.jpg';
-import rainCat from '../img/icons-row/rainyDays-cat.jpg';
-import smileUnicorn from '../img/icons-row/smile-unicorn.jpg';
+import React, { useState } from "react";
+import bigRabbit from "../img/icons-row/big-rabbit.jpg";
+import evilHystrix from "../img/icons-row/evil-hystrix.jpg";
+import manyOwl from "../img/icons-row/many-owl.jpg";
+import pageCat from "../img/icons-row/page-cat.jpg";
+import rainCat from "../img/icons-row/rainyDays-cat.jpg";
+import smileUnicorn from "../img/icons-row/smile-unicorn.jpg";
 
-const images = [
+interface Image {
+  src: string;
+  quote: string;
+}
+
+const images: Image[] = [
   { src: bigRabbit, quote: "Sometimes you just need to lay on the couch and read for a couple of years" },
   { src: evilHystrix, quote: "If anyone needs me, I’ll be reading. Please don’t need me" },
   { src: manyOwl, quote: "My problem with reading books is that I get distracted… by other books" },
@@ -15,15 +20,15 @@ const images = [
   { src: smileUnicorn, quote: "Apparently, reading during lunch and ignoring others is considered “rude”" }
 ];
 
-const Home = () => {
+const Home: React.FC = () => {
+  const [selectedQuote, setSelectedQuote] = useState<string | null>(null);
 
-  const [selectedQuote, setSelectedQuote] = useState(null);
-
-  const handleClickOutside = (e) => {
-    if (e.target.className === 'quote-overlay') {
-      setSelectedQuote(null); // Hide the quote when clicking outside
+  const handleClickOutside = (event: React.MouseEvent<HTMLDivElement>) => {
+    if ((event.target as HTMLDivElement).className === "quote-overlay") {
+      setSelectedQuote(null);
     }
   };
+
   return (
     <div className="home-container">
       <section className="intro-section">

@@ -1,4 +1,5 @@
-import footerImg from '../../img/unicorn_icon.png';
+import React from "react";
+import footerImg from "../../img/unicorn_icon.png";
 
 function Footer() {
     const date = new Date().getFullYear();

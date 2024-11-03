@@ -3,18 +3,18 @@ import { useAuth } from './userInfo';
 import { useNavigate } from 'react-router-dom';
 import userIconDino from '../../img/user_icon_dino.jpg';
 
-const UserMenu = () => {
+const UserMenu: React.FC = () => {
     const { user, userData } = useAuth();
-    const [isOpen, setIsOpen] = useState(false);
-    const menuRef = useRef(null);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const menuRef = useRef<HTMLDivElement | null>(null);
     const navigate = useNavigate();
 
     const toggleUserMenu = () => {
-        setIsOpen(!isOpen);
+        setIsOpen((prev) => !prev);
     };
 
-    const handleClickOutside = (e) => {
-        if (menuRef.current && !menuRef.current.contains(e.target)) {
+    const handleClickOutside = (e: MouseEvent) => {
+        if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
             setIsOpen(false);
         }
     };

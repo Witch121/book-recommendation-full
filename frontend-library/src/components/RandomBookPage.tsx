@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import adventureDog from '../img/AdventureDog.jpg';
+import React, { useState } from "react";
+import axios from "axios";
+import adventureDog from "../img/AdventureDog.jpg";
+
+// Define the type for random book information
+interface BookInfo {
+  title: string;
+  authors: string;
+  description: string;
+}
 
 function RandomBookPage() {
-  const [randomBook, setRandomBook] = useState(null);
+  const [randomBook, setRandomBook] = useState<BookInfo | null>(null);
 
   const handleRandomBookRecommendation = async () => {
-    const url = 'https://api.nytimes.com/svc/books/v3/lists.json';
+    const url = "https://api.nytimes.com/svc/books/v3/lists.json";
     const params = {
-      list: 'hardcover-fiction',
-      'api-key': 'bI5i7JGd0r7JCyZAItGjyvcelejeH5GD',
+      list: "hardcover-fiction",
+      "api-key": "bI5i7JGd0r7JCyZAItGjyvcelejeH5GD",
     };
 
     try {
@@ -21,15 +28,19 @@ function RandomBookPage() {
         const randomBookInfo = allBooks[randomIndex].book_details[0];
 
         setRandomBook({
-          title: randomBookInfo.title || 'No Title Available',
-          authors: randomBookInfo.author || 'Unknown Author',
-          description: randomBookInfo.description || 'No Description Available',
+          title: randomBookInfo.title || "No Title Available",
+          authors: randomBookInfo.author || "Unknown Author",
+          description: randomBookInfo.description || "No Description Available",
         });
       } else {
-        console.log('No books found.');
+        console.log("No books found.");
       }
     } catch (error) {
-      console.error(`An error occurred while fetching books: ${error.message}`);
+      if (axios.isAxiosError(error)) {
+        console.error(`An error occurred while fetching books: ${error.message}`);
+      } else {
+        console.error("An unknown error occurred.");
+      }
     }
   };
 

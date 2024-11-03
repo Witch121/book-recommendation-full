@@ -45,3 +45,49 @@
     font-weight: 600;
     text-align: center;
   }
+  @media (max-width: 768px) {
+    .user-icon img {
+        width: 4rem; /* Reduce icon size on smaller screens */
+        border-width: 4px; /* Adjust border width */
+    }
+
+    .dropdown {
+        width: 120px; /* Narrow dropdown width for smaller screens */
+        top: 45px;
+        right: 5px; /* Slightly adjust position for better fit */
+    }
+
+    .dropdown ul li {
+        padding: 8px; /* Reduce padding for items in dropdown */
+        font-size: 0.9rem; /* Adjust font size */
+    }
+
+    .user-icon-greeting {
+        font-size: 0.9rem; /* Slightly smaller font for greeting */
+        padding: 0.4rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .user-icon img {
+        width: 3.5rem; /* Further reduce icon size on mobile */
+        border-width: 3px;
+    }
+
+    .dropdown {
+        width: 100px; /* Compact dropdown width for mobile screens */
+        top: 40px;
+        right: 2px;
+    }
+
+    .dropdown ul li {
+        padding: 6px; /* Compact padding for mobile */
+        font-size: 0.8rem; /* Smaller font size for items */
+    }
+
+    .user-icon-greeting {
+        font-size: 0.8rem; /* Further reduce font size for greeting on mobile */
+        padding: 0.3rem;
+        margin: 0.5rem; /* Adjust margin for better fit */
+    }
+}

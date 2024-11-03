@@ -35,3 +35,31 @@
     max-width: 50%;
     width: auto;
 }
+@media (max-width: 768px) {
+    .sign-form input {
+        padding: 8px; /* Slightly reduce padding on smaller screens */
+        font-size: 0.9rem; /* Adjust font size for inputs */
+    }
+
+    .btn_signOut_row {
+        flex-direction: column; /* Stack buttons vertically for better alignment on smaller screens */
+        gap: 0.5rem;
+    }
+
+    .signUp_input {
+        max-width: 100%; /* Expand input width on mobile */
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .sign-form .btn-input {
+        margin: 0.5rem; /* Reduce margin on mobile screens */
+        padding: 8px; /* Compact button padding */
+        font-size: 0.9rem; /* Adjust font size for button text */
+    }
+
+    .signOut_page {
+        padding: 0.5rem; /* Compact padding on smaller screens */
+    }
+}

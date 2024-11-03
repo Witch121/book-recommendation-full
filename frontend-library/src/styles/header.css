@@ -24,3 +24,19 @@ header {
 .header-back {
     padding: 0 !important;
 }
+@media (max-width: 768px) {
+    .label {
+      width: 3.5rem;
+      height: 3.5rem;
+    }
+  
+    .header_row {
+      height: 5rem;
+    }
+  
+    #titel {
+      font-size: 1rem;
+      padding: 0.2rem;
+      border-width: 0.3rem;
+    }
+  }

@@ -17,3 +17,24 @@ input[type="file"]{
     font-weight: 500;
     font-size: 1.5rem;
 }
+@media (max-width: 768px) {
+    .AddedBooks_message button {
+        margin: 0.5rem; /* Reduce button margin on small screens */
+    }
+
+    .AddedBooks_message .btn_signOut_row {
+        justify-content: center; /* Center buttons for better alignment on mobile */
+    }
+
+    .CSV_upload_container {
+        margin: 0.5rem; /* Reduce container margin on small screens */
+    }
+
+    input[type="file"] {
+        font-size: 0.9rem; /* Adjust font size for file input on mobile */
+    }
+
+    .form-label {
+        font-size: 1.2rem; /* Slightly reduce form label font size on mobile */
+    }
+}

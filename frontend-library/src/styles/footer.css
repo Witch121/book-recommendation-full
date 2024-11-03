@@ -6,3 +6,13 @@
 .copyright{
     font-weight: 700;
 }
+@media (max-width: 600px) {
+    .Footer {
+        padding-top: 1rem; /* Reduce padding for smaller screens */
+        padding-bottom: 1rem; /* Add bottom padding to balance spacing */
+    }
+
+    .copyright {
+        font-size: 0.9rem; /* Slightly reduce font size on small screens */
+    }
+}

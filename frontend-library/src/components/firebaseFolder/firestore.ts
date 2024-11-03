@@ -1,8 +1,8 @@
-const { collection, addDoc, doc, setDoc } = require("firebase/firestore");
-const { db } = require("./firebase");
+import { collection, addDoc, doc, setDoc } from "firebase/firestore";
+import { db } from "./firebase";
 
 // Function to upload book data to Firestore
-const uploadBookToFirestore = async (bookData) => {
+export const uploadBookToFirestore = async (bookData: any) => {
   const booksCollectionRef = collection(db, "books");
   try {
     await addDoc(booksCollectionRef, bookData); // Add book data as a new document
@@ -13,7 +13,7 @@ const uploadBookToFirestore = async (bookData) => {
 };
 
 // Function to upload user data to Firestore
-const uploadUserToFirestore = async (userData) => {
+export const uploadUserToFirestore = async (userData: { uid: any; email?: string | null; username?: any; }) => {
   console.log(userData.uid);
 
   try {
@@ -22,9 +22,4 @@ const uploadUserToFirestore = async (userData) => {
   } catch (error) {
     console.error("Error adding user:", error);
   }
-};
-
-module.exports = { 
-  uploadBookToFirestore, 
-  uploadUserToFirestore, 
 };

@@ -45,3 +45,34 @@
   .recommendBooksList{
     color: black !important;
   }
+  @media (max-width: 768px) {
+    .booklist-header, .booklist-form {
+        flex-direction: column; /* Stack elements vertically on tablets and smaller */
+        align-items: flex-start;
+    }
+
+    .recommendBooks-btn {
+        margin-left: 0; /* Reset margin for centered alignment on smaller screens */
+        width: 100%; /* Full width for easier tapping */
+        text-align: center;
+    }
+
+    .form-label {
+        font-size: 1.2rem; /* Slightly smaller font size for form label */
+    }
+}
+
+@media (max-width: 480px) {
+    .recommendBooks-btn {
+        padding: 8px; /* Reduce button padding on mobile */
+        font-size: 0.9rem; /* Adjust font size for button text */
+    }
+
+    #bookList_icon {
+        height: 30px; /* Reduce icon size for mobile screens */
+    }
+
+    .form-label {
+        font-size: 1rem; /* Further reduce label font size for compactness */
+    }
+}

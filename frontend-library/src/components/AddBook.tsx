@@ -1,11 +1,37 @@
-import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Papa from 'papaparse';
-import { uploadBookToFirestore } from '../components/firebaseFolder/firestore';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../components/reuseable/userInfo';
+import React, { useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Papa from "papaparse";
+import { uploadBookToFirestore } from "./firebaseFolder/firestore";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "./reuseable/userInfo";
 
-const AddBook = () => {
+// Define types for book data and CSV data
+interface BookData {
+  title: string;
+  author: string;
+  genre: string;
+  series_name: string;
+  bond_number: number;
+  status: string;
+  location: string;
+  keywords: string[];
+  rating: number;
+  uid: string;
+}
+
+interface CsvRowData {
+  title: string;
+  author: string;
+  genre: string;
+  series_name?: string;
+  bond_number?: string;
+  status: string;
+  place: string;
+  keywords?: string;
+  rating?: string;
+}
+
+const AddBook: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -21,29 +47,31 @@ const AddBook = () => {
     { tooltip: "Describe the plot in 3 words. <br /> Challenge accepted?" },
   ];
 
-  const [bookData, setBookData] = useState({
-    title: '',
-    author: '',
-    genre: '',
-    series_name: '',
+  // Initialize book data state with types
+  const [bookData, setBookData] = useState<BookData>({
+    title: "",
+    author: "",
+    genre: "",
+    series_name: "",
     bond_number: 0,
-    status: 'read',
-    location: 'home',
+    status: "read",
+    location: "home",
     keywords: [],
     rating: 0,
-    uid: user.uid,
+    uid: user?.uid || "",
   });
-  const [csvData, setCsvData] = useState([]);
-  const [message, setMessage] = useState('');
-  const [formSubmitted, setFormSubmitted] = useState(false);
+
+  const [csvData, setCsvData] = useState<CsvRowData[]>([]);
+  const [message, setMessage] = useState<string>("");
+  const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
 
   // Handle input changes for manual book addition
-  const handleInputChange = (event) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
-    if (name === 'keywords') {
+    if (name === "keywords") {
       setBookData((prevData) => ({
         ...prevData,
-        [name]: value.split(',').map((keyword) => keyword.trim()),
+        [name]: value.split(",").map((keyword) => keyword.trim()),
       }));
     } else {
       setBookData((prevData) => ({
@@ -54,73 +82,85 @@ const AddBook = () => {
   };
 
   // Handle CSV file upload
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
       complete: function (results) {
-        setCsvData(results.data);
+        setCsvData(results.data as CsvRowData[]);
       },
     });
   };
 
   // Upload CSV data to Firestore
   const uploadCSVToFirestore = async () => {
+    if (!user) {
+      setMessage("User not authenticated.");
+      return;
+    }
+
     for (const row of csvData) {
       try {
         await uploadBookToFirestore({
           title: row.title,
           author: row.author,
           genre: row.genre,
-          series_name: row.series_name,
+          series_name: row.series_name || "",
           bond_number: row.bond_number ? Number(row.bond_number) : 0,
           status: row.status,
-          place: row.place,
-          keywords: row.keywords ? row.keywords.split(',').map(keyword => keyword.trim()) : [],
+          location: row.place,
+          keywords: row.keywords ? row.keywords.split(',').map((keyword) => keyword.trim()) : [],
           rating: row.rating ? Number(row.rating) : 0,
           uid: user.uid,
         });
-        setMessage('CSV document was added to Firestore');
+        setMessage("CSV document was added to Firestore");
       } catch (error) {
-        console.error('Error adding document:', error);
+        console.error("Error adding document:", error);
         setMessage(`Error adding document: "${error}"`);
       }
     }
     setCsvData([]);
-    document.getElementById('csvFileInput').value = '';
+    (document.getElementById("csvFileInput") as HTMLInputElement).value = "";
   };
 
   // Upload a manually entered book to Firestore
   const addBook = async () => {
+    if (!user) {
+      setMessage("User not authenticated.");
+      return;
+    }
+
     try {
       await uploadBookToFirestore(bookData);
       setMessage(`Book "${bookData.title}" added to Firestore`);
       setFormSubmitted(true);
     } catch (error) {
-      console.error('Error adding book:', error);
+      console.error("Error adding book:", error);
     }
   };
 
   const resetForm = () => {
     setBookData({
-      title: '',
-      author: '',
-      genre: '',
-      series_name: '',
+      title: "",
+      author: "",
+      genre: "",
+      series_name: "",
       bond_number: 0,
-      status: 'not read',
-      location: 'home',
+      status: "not read",
+      location: "e-reader",
       keywords: [],
       rating: 0,
-      uid: user.uid,
+      uid: user?.uid || "",
     });
     setFormSubmitted(false);
-    setMessage('');
+    setMessage("");
   };
 
   const goHome = () => {
-    navigate('/');
+    navigate("/");
   };
 
   return (
@@ -133,8 +173,7 @@ const AddBook = () => {
             <fieldset>
               <legend><h2>Add Book</h2></legend>
 
-              {[
-                { name: "title", label: "Title", type: "text", placeholder: "Title", tooltip: tooltipsText[0].tooltip },
+              {[{ name: "title", label: "Title", type: "text", placeholder: "Title", tooltip: tooltipsText[0].tooltip },
                 { name: "author", label: "Author", type: "text", placeholder: "Author", tooltip: tooltipsText[1].tooltip },
                 { name: "genre", label: "Genre", type: "text", placeholder: "Genre", tooltip: tooltipsText[2].tooltip },
                 { name: "series_name", label: "Series Name", type: "text", placeholder: "Series Name", tooltip: tooltipsText[6].tooltip },
@@ -152,7 +191,7 @@ const AddBook = () => {
                     type={type}
                     name={name}
                     className="pure-u-23-24"
-                    value={bookData[name]}
+                    value={bookData[name as keyof BookData]}
                     onChange={handleInputChange}
                     placeholder={placeholder}
                     {...rest}
@@ -181,12 +220,8 @@ const AddBook = () => {
                 </select>
               </div>
 
-              <button type="submit" onClick={addBook} className="btn-table">
-                Add Book to Library
-              </button>
-              <button type="submit" onClick={resetForm} className="btn-table">
-                Clean the
-              </button>
+              <button type="button" onClick={addBook} className="btn-table">Add Book to Library</button>
+              <button type="button" onClick={resetForm} className="btn-table">Clear Form</button>
             </fieldset>
           </form>
 

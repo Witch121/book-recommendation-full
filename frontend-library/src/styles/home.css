@@ -9,10 +9,10 @@
 
 .intro-section, .feature-section {
   margin-bottom: 40px;
-  height: 35%;
 }
+
 .intro-section {
-  height: 50%;
+  height: auto;
 }
 
 .intro-title {
@@ -98,4 +98,61 @@
   font-size: 1.5rem;
   color: #333;
   margin: 0;
+}
+
+
+@media (max-width: 768px) {
+  .home-container{
+    padding: 1rem;
+    max-width: calc(100vw -5%);
+  }
+  .intro-title {
+    font-size: 2rem;
+  }
+
+  .intro-text {
+    font-size: 1rem;
+    margin: 0.8rem;
+  }
+
+  .rowImg-item {
+    height: 6rem;
+    margin: 1rem;
+  }
+
+  .quote-box {
+    padding: 1.5rem;
+  }
+
+  .quote-box p {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-container{
+    max-width: 90%;
+  }
+
+  .intro-title {
+    font-size: 1.8rem;
+  }
+
+  .intro-text {
+    font-size: 0.9rem;
+  }
+
+  .rowImg-track {
+    width: calc(300%);
+    animation: scroll 60s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+  }
+
+  .quote-box {
+    padding: 1rem;
+    max-width: 80%;
+  }
+
+  .quote-box p {
+    font-size: 1.2rem;
+  }
 }

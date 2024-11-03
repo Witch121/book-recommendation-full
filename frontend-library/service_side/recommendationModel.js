@@ -1,114 +1,74 @@
-const tf = require("@tensorflow/tfjs");
-const { db } = require("../src/components/firebaseFolder/firebaseAdmin");
-const { getRecommendations: getTensorflowRecommendations } = require("./recommendations");
+const { HfInference } = require("@huggingface/inference");
 
-// Fetch user's TensorFlow model or create a new one if it doesn't exist
-async function getUserModel(userId) {
-  const modelRef = db.collection('models').doc(userId);
-  const modelDoc = await modelRef.get();
+// Initialize Hugging Face API with your API key
+const hf = new HfInference("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");
+const model = "sentence-transformers/paraphrase-MiniLM-L6-v2";
 
-  // Check if model exists, otherwise create a new one
-  if (!modelDoc.exists) {
-    console.log("No existing model found. Creating a new model...");
-
-    await createUserModel(userId);
-
-    // Re-fetch model data after creation
-    const newModelDoc = await modelRef.get();
-    if (!newModelDoc.exists) {
-      throw new Error("Model creation failed. Unable to fetch new model.");
-    }
-    return await loadModelFromData(newModelDoc.data());
-  }
-
-  // Load existing model data and validate its structure
-  return await loadModelFromData(modelDoc.data());
+// Generate embeddings for a list of text items
+async function generateEmbeddings(texts) {
+    const embeddings = await Promise.all(
+        texts.map(async (text) => {
+            const response = await hf.featureExtraction({
+                model,
+                inputs: text,
+            });
+            return response;
+        })
+    );
+    return embeddings;
 }
 
-// Helper function to load and validate model data
-async function loadModelFromData(modelData) {
-  if (!modelData.modelTopology) {
-    throw new Error("Model data is missing 'modelTopology'");
-  }
-  if (!modelData.weightsManifest || modelData.weightsManifest.length === 0) {
-    throw new Error("Model data is missing 'weightsManifest'");
-  }
-  if (!modelData.weightData) {
-    throw new Error("Model data is missing 'weightData'");
-  }
-
-  const modelArtifacts = {
-    modelTopology: modelData.modelTopology,
-    weightSpecs: modelData.weightsManifest[0].weights,
-    weightData: new Uint8Array(modelData.weightData).buffer,
-  };
-
-  // Load the model from artifacts
-  return await tf.loadLayersModel(tf.io.fromMemory(modelArtifacts));
+// Calculate cosine similarity between two vectors
+function cosineSimilarity(a, b) {
+    let dotProduct = 0;
+    let normA = 0;
+    let normB = 0;
+    for (let i = 0; i < a.length; i++) {
+        dotProduct += a[i] * b[i];
+        normA += a[i] ** 2;
+        normB += b[i] ** 2;
+    }
+    return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
 }
 
-// Create a new TensorFlow model for a user and save it in Firebase
-async function createUserModel(userId) {
-  const model = tf.sequential();
-  model.add(tf.layers.dense({ units: 50, activation: "relu", inputShape: [40] }));
-  model.add(tf.layers.dense({ units: 10, activation: "relu" }));
-  model.add(tf.layers.dense({ units: 1, activation: "linear" }));
+// Main function to generate recommendations based on a given book name and user's library
+async function generateRecommendations(bookName, books = [], userLibrary = []) {
+  const userGenres = new Set(userLibrary.map(book => book.genre));
+  const booksToExclude = new Set(userLibrary.map(book => book.title.toLowerCase()));
 
-  model.compile({ optimizer: "adam", loss: "meanSquaredError" });
+  // Remove strict genre filtering for testing
+  const filteredBooks = books.filter(book =>
+      book?.title && !booksToExclude.has(book.title.toLowerCase())
+  );
 
-  const modelArtifacts = await model.save(tf.io.withSaveHandler(async (artifacts) => artifacts));
+  //console.log("Filtered books for recommendation:", filteredBooks);
 
-  // If weightsManifest is undefined, create a basic structure
-  const weightsManifest = modelArtifacts.weightsManifest || [
-    {
-      paths: ["path/to/weights.bin"],
-      weights: [
-        { name: "dense_Dense1/kernel", shape: [40, 50], dtype: "float32" },
-        { name: "dense_Dense1/bias", shape: [50], dtype: "float32" },
-        { name: "dense_Dense2/kernel", shape: [50, 10], dtype: "float32" },
-        { name: "dense_Dense2/bias", shape: [10], dtype: "float32" },
-        { name: "dense_Dense3/kernel", shape: [10, 1], dtype: "float32" },
-        { name: "dense_Dense3/bias", shape: [1], dtype: "float32" }
-      ]
-    }
-  ];
+  const inputs = [bookName, ...filteredBooks.map(book => `${book.title} ${book.description || ""}`)];
+  const embeddings = await generateEmbeddings(inputs);
 
-  console.log("Saving model topology:", modelArtifacts.modelTopology);
-  console.log("Saving weights manifest:", weightsManifest);
-  console.log("Saving weight data:", modelArtifacts.weightData);
+  const targetEmbedding = embeddings[0];
+  const bookEmbeddings = embeddings.slice(1);
 
-  const modelRef = db.collection("models").doc(userId);
-  await modelRef.set({
-    modelTopology: modelArtifacts.modelTopology,
-    weightsManifest: weightsManifest,
-    weightData: Array.from(new Uint8Array(modelArtifacts.weightData)),
+  const scores = bookEmbeddings.map((embedding, index) => {
+      const similarity = cosineSimilarity(targetEmbedding, embedding) * 100;
+      //console.log(`Similarity for ${filteredBooks[index].title}: ${similarity}%`);
+      return { ...filteredBooks[index], similarity };
   });
 
-  return model;
+  // Sort by similarity and return the top 10 recommendations
+  const sortedScores = scores.sort((a, b) => b.similarity - a.similarity).slice(0, 10);
+  //console.log("Sorted recommendations:", sortedScores);
+
+  return sortedScores.map(book => ({
+      title: book.title,
+      authors: book.authors || ["Unknown Author"],
+      genre: book.genre,
+      averageRating: book.averageRating || "N/A",
+      similarity: book.similarity.toFixed(2),
+      publicationDate: book.publicationDate,
+      isbn: book.isbn
+  }));
 }
 
-// Train the model with book data
-async function trainModel(model, books) {
-  const keywordVectors = books.map(() => new Array(40).fill(0));  // Example data
-  const ratings = books.map(book => book.averageRating || 0);
 
-  const inputTensor = tf.tensor2d(keywordVectors, [books.length, 40]);
-  const outputTensor = tf.tensor2d(ratings, [books.length, 1]);
-
-  await model.fit(inputTensor, outputTensor, { epochs: 10 });
-}
-
-// Handle the recommendation process
-async function generateRecommendations(bookName, books, userId) {
-  let model = await getUserModel(userId);
-  
-  if (!model) {
-      model = await createUserModel(userId);
-      await trainModel(model, books);
-  }
-
-  // Use the TensorFlow-based recommendation logic from recommendations.js
-  return await getTensorflowRecommendations(bookName, books, model);
-}
-
-module.exports = { generateRecommendations, createUserModel };
+module.exports = { generateRecommendations };

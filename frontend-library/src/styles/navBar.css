@@ -1,23 +1,111 @@
-.navBar {
-    background-color:  #00264d;
-    height: 100%;
-    font-size: 20px;
-    padding-right: 20px;
-    margin-right: 20px;
-    padding-top: 0.5rem;
-    border-radius: 0.275rem;
-}
-.linkNav {
-    color: whitesmoke;
-    text-decoration: none !important;
+.navBar-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .nav-toggle-btn {
+    display: none;
+  }
+  
+  .navBar ul {
     display: flex;
     flex-direction: column;
-}
-.linkNav:hover {
-    color: #6699CC;
-}
-li {
-    margin-top: 10px;
-    color: whitesmoke;
+    background-color: #00264d;
+    border: 1px solid #ccc;
+    border-radius: 0.375rem;
+    width: 90%;
+    height: 100dvh;
+  }
+  .navBar ul li{
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+    font-size: 1.3rem;
+    font-weight: 600;
     list-style: none;
-}
+  }
+
+  .linkNav:hover{
+    color: #6699CC;
+  }
+  .linkNav{
+    color: whitesmoke;
+    text-decoration: none;
+  }
+  
+
+  @media (max-width: 1000px) {
+    .linkNav:hover{
+      color: #6699CC;
+    }
+
+    .nav-toggle-btn {
+      display: block; 
+      width: 90%;
+      border: none;
+      padding: 10px;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      background-color: #00264d;
+      color: whitesmoke;
+    }
+  
+    .navBar ul {
+      display: none;
+    }
+  
+    .navBar.open ul {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      width: 90%;
+      left: 0;
+      background-color: #00264d;
+      border: 1px solid #ccc;
+      border-radius: 0.375rem;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      padding-left: 1rem;
+      height: 94%;
+    }
+  
+    .linkNav {
+      color: whitesmoke !important;
+      text-decoration: none;
+    }
+    .navBar ul li{
+        padding-top: 0.8rem;
+        padding-bottom: 0.8rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .nav-toggle-btn {
+      font-size: 0.9rem;
+      padding: 8px;
+    }
+
+    .navBar.open ul {
+        height: fit-content;
+    }
+
+    .navBar ul li {
+      padding: 8px;
+      font-size: 0.9rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .nav-toggle-btn {
+      font-size: 0.8rem;
+      padding: 6px;
+    }
+  
+    .navBar.open ul {
+      width: 90%;
+    }
+  
+    .navBar ul li {
+      padding: 6px;
+      font-size: 0.8rem;
+    }
+  }
+  

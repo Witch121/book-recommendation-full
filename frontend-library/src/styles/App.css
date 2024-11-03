@@ -22,3 +22,14 @@ h1 {
   margin: 10px;
   min-height: 100dvh;
 }
+
+@media (max-width: 768px) {
+  .MainSpace {
+    grid-template-columns: 1fr; 
+    grid-template-rows: auto auto; 
+  }
+
+  .MainSpace > *:first-child {
+    margin-bottom: 10px;
+  }
+}
