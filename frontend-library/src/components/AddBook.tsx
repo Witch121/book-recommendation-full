@@ -135,7 +135,7 @@ const AddBook: React.FC = () => {
 
     try {
       await uploadBookToFirestore(bookData);
-      setMessage(`Book "${bookData.title}" added to Firestore`);
+      setMessage(`Book "${bookData.title}" added to database`);
       setFormSubmitted(true);
     } catch (error) {
       console.error("Error adding book:", error);
@@ -228,7 +228,7 @@ const AddBook: React.FC = () => {
           <div className='CSV_upload_container'>
             <h2>Upload Books via CSV</h2>
             <input type="file" accept=".csv" onChange={handleFileUpload} id='csvFileInput' />
-            <button onClick={uploadCSVToFirestore} className='btn-table'>Upload CSV to Firestore</button>
+            <button onClick={uploadCSVToFirestore} className='btn-table'>Upload CSV to database</button>
           </div>
         </>
       ) : (

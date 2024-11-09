@@ -50,6 +50,7 @@ const Library: React.FC = () => {
 
     fetchBooks();
   }, [user, sortBy]);
+  
 
   const handleSearch = () => setFilter(searchTerm);
 
@@ -127,6 +128,13 @@ const Library: React.FC = () => {
     document.body.removeChild(link);
   };
 
+  const handleOpenLink = (type: "wikipedia" | "goodreads", query: string) => {
+    const baseUrl = type === "wikipedia" 
+		? `https://www.goodreads.com/search?q=` 
+    : `https://en.wikipedia.org/wiki/Special:Search?search=`;
+    window.open(`${baseUrl}${encodeURIComponent(query)}`, "_blank");
+};
+
   const filteredBooks = books.filter((book) => {
     const lowerCaseFilter = filter.toLowerCase();
     return (
@@ -181,7 +189,11 @@ const Library: React.FC = () => {
                     <td key={field}>
                       {editBookId === book.id ? (
                         field === "status" ? (
-                          <select name="status" value={updatedBook.status || book.status} onChange={handleInputChange}>
+                          <select
+                            name="status"
+                            value={updatedBook.status || book.status}
+                            onChange={handleInputChange}
+                          >
                             <option value="read">Read</option>
                             <option value="reading">Reading</option>
                             <option value="not read">Not Read</option>
@@ -199,18 +211,31 @@ const Library: React.FC = () => {
                             max={field === "rating" ? "5" : undefined}
                           />
                         )
+                      ) : field === "title" ? (
+                        <span
+                          className="link"
+                          onClick={() => handleOpenLink("wikipedia", book.title)}
+                        >
+                          {book.title}
+                        </span>
+                      ) : field === "author" ? (
+                        <span
+                          className="link"
+                          onClick={() => handleOpenLink("wikipedia", book.author)}
+                        >
+                          {book.author}
+                        </span>
+                      ) : field === "series_name" ? (
+                        book.series_name && book.bond_number && book.bond_number > 0
+                          ? `${book.series_name} (#${book.bond_number})`
+                          : "Not part of a series"
+                      ) : field === "keywords" ? (
+                        Array.isArray(book[field as keyof Book]) ? (book[field as keyof Book] as string[]).join(", ") : "N/A"
                       ) : (
-                        field === "series_name"
-                          ? book.series_name && book.bond_number && book.bond_number > 0
-                            ? `${book.series_name} (#${book.bond_number})`
-                            : "Not part of a series"
-                          : field === "keywords"
-                            ? Array.isArray(book[field as keyof Book]) ? (book[field as keyof Book] as string[]).join(", ") : "N/A"
-                            : book[field as keyof Book]
+                        book[field as keyof Book]
                       )}
                     </td>
                   ))}
-
                   <td>
                     {editBookId === book.id ? (
                       <button onClick={handleSaveClick} className="btn-table save-btn">Save</button>

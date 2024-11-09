@@ -44,7 +44,7 @@ function BookRecommendation() {
         const querySnapshot = await getDocs(q);
         const libraryData = querySnapshot.docs.map((doc) => doc.data() as UserBook);
         setUserLibrary(libraryData);
-        console.log(libraryData);
+        //console.log(libraryData);
       } catch (error) {
         console.error("Error fetching user library:", error);
       }

@@ -63,6 +63,7 @@ const NavBar = () => {
               <li><Link to="/randomBook" className="linkNav">I’m feeling Lucky</Link></li>
               <li><Link to="/about" className="linkNav">About</Link></li>
               {isAdmin && <li><Link to="/AdminPage" className="linkNav">Admin Page</Link></li>}
+              <li><Link to = "/Profile" className="linkNav">Profile</Link></li>
               <li><Link to="/SignOut" className="linkNav">Sign Out</Link></li>
             </>
           ) : (

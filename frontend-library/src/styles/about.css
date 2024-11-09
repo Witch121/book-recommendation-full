@@ -78,6 +78,34 @@
   background-color: #0056b3;
 }
 
+.btn-input.cancel{
+  background-color: #6a97b0;
+  margin: 1rem;
+}
+
+.btn-input.cancel:hover {
+  background-color: #114278;
+}
+
+.avatar-selection {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.avatar-selection img {
+  height: auto;
+  width: 100%;
+  max-width: 100%;
+  padding: 1rem;
+  cursor: pointer;
+  transition: border 0.3s ease;
+}
+
+.avatar-option.selected {
+  border: 0.3rem solid #3973ac
+}
+
 @media (max-width: 850px) {
   .custom-row {
     display: flex;

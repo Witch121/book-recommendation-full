@@ -38,7 +38,7 @@ const SignOut: React.FC = () => {
           </div>
           <div className="custom-col about text">
             <h2>Are you sure you want to sign out?</h2>
-            <div className="btn_signOut_row">
+            <div className="btn_row">
               <button onClick={handleSignOut} className="btn-input">Yes</button>
               <button onClick={handleCancel} className="btn-input">No</button>
             </div>

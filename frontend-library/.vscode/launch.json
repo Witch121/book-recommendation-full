@@ -17,6 +17,17 @@
             "name": "Launch Fun Test",
             "skipFiles": ["<node_internals>/**"],
             "program": "${workspaceFolder}/functions/test.js"
-        }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Server",
+            "skipFiles": ["<node_internals>/**"],
+            "program": "${workspaceFolder}/server.ts",
+            "runtimeArgs": ["-r", "ts-node/register"],
+            "outFiles": ["${workspaceFolder}/**/*.ts"],
+            "cwd": "${workspaceFolder}",
+            "sourceMaps": true
+          }
     ]
 }
