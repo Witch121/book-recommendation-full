@@ -4,6 +4,8 @@ import EditBtnImg from "../img/edit_icon.png";
 import DeleteBtnImg from "../img/delete_icon.png";
 import { db } from "./firebaseFolder/firebase";
 import { collection, query, where, getDocs, orderBy, updateDoc, doc, deleteDoc } from "firebase/firestore";
+import noteIcon from "../img/notes_icon.png";
+import { useNavigate } from "react-router-dom";
 
 // Define types for book data
 interface Book {
@@ -21,6 +23,7 @@ interface Book {
 
 const Library: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [books, setBooks] = useState<Book[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [filter, setFilter] = useState<string>("");
@@ -30,6 +33,18 @@ const Library: React.FC = () => {
   const [bookToDelete, setBookToDelete] = useState<Book | null>(null);
   const [editBookId, setEditBookId] = useState<string | null>(null);
   const [updatedBook, setUpdatedBook] = useState<Partial<Book>>({});
+
+  const tooltipsText = [
+    "Title of the book",
+    "Author of the book",
+    "Genre – not necessarily standard",
+    "Location – where’s the book now?",
+    "Your status: read, reading, or still on the list?",
+    "Rating (1-5) – no pressure, just perfection!",
+    "Part of a series? That is the question",
+    "Series order – which part?",
+    "Core memory associated with this book",
+  ];
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -129,7 +144,7 @@ const Library: React.FC = () => {
   };
 
   const handleOpenLink = (type: "wikipedia" | "goodreads", query: string) => {
-    const baseUrl = type === "wikipedia" 
+    const baseUrl = type === "goodreads" 
 		? `https://www.goodreads.com/search?q=` 
     : `https://en.wikipedia.org/wiki/Special:Search?search=`;
     window.open(`${baseUrl}${encodeURIComponent(query)}`, "_blank");
@@ -176,8 +191,11 @@ const Library: React.FC = () => {
           <table className="library_table">
             <thead>
               <tr className="showLibraryTableHead">
-                {["Title", "Author", "Genre", "Place", "Status", "Rating", "Serie", "Keywords"].map((label) => (
-                  <th key={label} className="tooltips">{label}</th>
+                {["Title", "Author", "Genre", "Place", "Status", "Rating", "Serie", "Keywords"].map((label, index) => (
+                  <th key={label} className="tooltips">
+                    {label}
+                    <span className="tooltip-text" dangerouslySetInnerHTML={{ __html: tooltipsText[index] }}></span>
+                    </th>
                 ))}
                 <th></th>
               </tr>
@@ -212,16 +230,20 @@ const Library: React.FC = () => {
                           />
                         )
                       ) : field === "title" ? (
-                        <span
-                          className="link"
-                          onClick={() => handleOpenLink("wikipedia", book.title)}
-                        >
-                          {book.title}
+                        <span className="link">
+                            <span
+                              onClick={() => handleOpenLink("goodreads", book.title)}
+                            >
+                              {book.title}
+                            </span>
+                          <button onClick={() => navigate(`/Notes/${book.id}`)} className="btn-table img">
+                            <img src={noteIcon} alt="Add Note" className="table-img-btn" />
+                        </button>
                         </span>
                       ) : field === "author" ? (
                         <span
                           className="link"
-                          onClick={() => handleOpenLink("wikipedia", book.author)}
+                          onClick={() => handleOpenLink("goodreads", book.author)}
                         >
                           {book.author}
                         </span>

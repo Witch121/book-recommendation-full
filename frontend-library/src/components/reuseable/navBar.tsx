@@ -58,6 +58,7 @@ const NavBar = () => {
             <>
               <li><Link to="/" className="linkNav">Home</Link></li>
               <li><Link to="/Library" className="linkNav">Library</Link></li>
+              <li><Link to="/Notes" className="linkNav">Notes</Link></li>
               <li><Link to="/AddBook" className="linkNav">Add Book</Link></li>
               <li><Link to="/recommendation" className="linkNav">Recommendations</Link></li>
               <li><Link to="/randomBook" className="linkNav">I’m feeling Lucky</Link></li>

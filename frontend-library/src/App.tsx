@@ -12,10 +12,13 @@ import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import SignOut from "./components/SignOut";
 import AddBook from "./components/AddBook";
+import Notes from "./components/Notes";
+import AddNote from "./components/AddNote"; 
 import { AuthProvider } from "./components/reuseable/userInfo";
 import Library from "./components/Library";
 import RandomBookPage from "./components/RandomBookPage";
 import AdminPage from "./components/AdminPage";
+
 
 function App() {
   return (
@@ -33,6 +36,8 @@ function App() {
               <Route path="/SignUp" element={<SignUp />} />
               <Route path="/Profile" element={<Profile />} />
               <Route path="/Library" element={<Library />}/>
+              <Route path="/Notes" element={<Notes />}/>
+              <Route path="/Notes/:id" element={<AddNote />} />
               <Route path="/recommendation" element={<BookRecommendation />} />
               <Route path="/randomBook" element={<RandomBookPage />} />
               <Route path="/about" element={ <About />} />

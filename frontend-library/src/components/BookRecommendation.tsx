@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "./reuseable/userInfo";
 import { db } from "./firebaseFolder/firebase";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, getDoc } from "firebase/firestore";
 
-// Define the type for a recommendation
 interface Recommendation {
   title: string;
   authors: string[];
@@ -17,7 +16,6 @@ interface Recommendation {
   language?: string;
 }
 
-// Define the type for a user's library book data
 interface UserBook {
   id: string;
   title: string;
@@ -27,30 +25,46 @@ interface UserBook {
   keywords?: string[];
 }
 
+interface UserPreferences {
+  favoriteGenres: string[];
+  favoriteAuthors: string[];
+  favoriteBooks: string[];
+}
+
 function BookRecommendation() {
   const { user, loading: userLoading } = useAuth();
   const [bookName, setBookName] = useState<string>("");
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [userLibrary, setUserLibrary] = useState<UserBook[]>([]);
+  const [userPreferences, setUserPreferences] = useState<UserPreferences | null>(null);
 
-  // Fetch user's library data from Firestore
   useEffect(() => {
-    const fetchUserLibrary = async () => {
-      if (!user) return;
+    if (!user) return;
+
+    const fetchUserData = async () => {
       try {
+        
+        const docRef = doc(db, "users", user.uid);
+        //console.log("uid: ", user.uid); // Debugging line
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setUserPreferences(docSnap.data() as UserPreferences);
+        } else {
+          console.error("No user preferences found");
+        }
+
         const booksRef = collection(db, "books");
         const q = query(booksRef, where("uid", "==", user.uid));
         const querySnapshot = await getDocs(q);
         const libraryData = querySnapshot.docs.map((doc) => doc.data() as UserBook);
         setUserLibrary(libraryData);
-        //console.log(libraryData);
       } catch (error) {
-        console.error("Error fetching user library:", error);
+        console.error("Error fetching user library or preferences:", error);
       }
     };
 
-    fetchUserLibrary();
+    fetchUserData();
   }, [user]);
 
   const handleBookInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,13 +77,12 @@ function BookRecommendation() {
 
     const requestData = { 
       book_name: bookName, 
-      user_id: user?.uid,
-      user_library: userLibrary // Pass user library to the backend
+      user_preferences: userPreferences,
+      user_library: userLibrary
     };
 
     try {
       const { data } = await axios.post<Recommendation[]>("http://localhost:5000/api/", requestData);
-      console.log("Recommendations received from server:", data);
       setRecommendations(data);
     } catch (error) {
       if (error instanceof Error) {
@@ -118,11 +131,14 @@ function BookRecommendation() {
               {recommendations.map((rec, index) => (
                 <li key={index} className="recommendBooksList">
                   <strong>{rec.title}</strong> by {Array.isArray(rec.authors) ? rec.authors.join(", ") : "Unknown Author"} <br />
-                  {rec.averageRating && <span>Average Rating: {rec.averageRating}</span>} <br />
-                  {rec.similarity && <span>Similarity: {rec.similarity}%</span>} <br />
-                  {rec.description && <p>{rec.description}</p>}
-                  {rec.categories && <span>Categories: {rec.categories.join(", ")}</span>} <br />
-                  {rec.pageCount && <span>Page Count: {rec.pageCount}</span>} <br />
+                  
+                  {rec.similarity > 80 ? (
+                      <span>This book is good much for you!</span>
+                  ) : (
+                      <span>This book is in the grey zone: may be top and may be flop</span>
+                  )}
+                  <br />                  
+                  {rec.categories && <span>Genre: {rec.categories.join(", ")}</span>} <br />
                   {rec.language && <span>Language: {rec.language.toUpperCase()}</span>}
                 </li>
               ))}

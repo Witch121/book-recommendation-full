@@ -1,0 +1,10 @@
+.noteListItem p{
+    border: 1px black solid;
+    border-radius: 0.375rem;
+    width: fit-content;
+    padding: 1rem;
+}
+
+.noteListItem{
+    list-style: none;
+}

@@ -9,6 +9,7 @@
 @import url("./library.css");
 @import url("./userMenu.css");
 @import url("./randomPage.css");
+@import url("./notes.css");
 
 body {
   background-color: #edf2f7!important;
